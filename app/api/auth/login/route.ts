@@ -9,6 +9,7 @@ export async function GET() {
     httpOnly: true,
     maxAge: 60 * 10,
     path: '/',
+    secure: process.env.NODE_ENV === 'production',
   })
   return NextResponse.redirect(buildAuthUrl(state))
 }

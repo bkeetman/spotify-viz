@@ -24,16 +24,19 @@ export async function GET(req: NextRequest) {
       httpOnly: true,
       maxAge: tokens.expires_in,
       path: '/',
+      secure: process.env.NODE_ENV === 'production',
     })
     res.cookies.set('spotify_refresh_token', tokens.refresh_token, {
       httpOnly: true,
       maxAge: 60 * 60 * 24 * 30,
       path: '/',
+      secure: process.env.NODE_ENV === 'production',
     })
     res.cookies.set('spotify_token_expires_at', String(expiresAt), {
-      httpOnly: true,
+      httpOnly: false,
       maxAge: 60 * 60 * 24 * 30,
       path: '/',
+      secure: process.env.NODE_ENV === 'production',
     })
     res.cookies.delete('spotify_auth_state')
 
