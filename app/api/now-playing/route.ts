@@ -16,7 +16,7 @@ export async function GET() {
   })
 
   if (res.status === 204) {
-    return NextResponse.json({ isPlaying: false, trackId: null })
+    return NextResponse.json({ track: null, audioFeatures: null })
   }
 
   if (res.status === 401) {

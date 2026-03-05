@@ -14,7 +14,8 @@ export function parseNowPlaying(data: any): NowPlayingData | null {
   if (!data?.item) return null
 
   const images = data.item.album.images as { url: string; width: number }[]
-  const largestImage = images.sort((a, b) => b.width - a.width)[0]
+  if (!images.length) return null
+  const largestImage = [...images].sort((a, b) => b.width - a.width)[0]
 
   return {
     isPlaying: data.is_playing,
