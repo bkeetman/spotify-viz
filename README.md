@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Spotify Visualizer
 
-## Getting Started
+Een fullscreen muziek-visualizer voor je thuisbar. Cast naar je TV via Chromecast.
 
-First, run the development server:
+## Setup
+
+### 1. Spotify Developer App aanmaken
+
+1. Ga naar [developer.spotify.com/dashboard](https://developer.spotify.com/dashboard)
+2. Log in met je Spotify account
+3. Klik **Create App**
+4. Vul in:
+   - App name: `Spotify Visualizer` (of wat je wilt)
+   - App description: iets beschrijvends
+   - Redirect URI: `http://localhost:3000/api/auth/callback` (voor lokaal)
+   - Voor productie op Vercel: `https://jouw-app.vercel.app/api/auth/callback`
+5. Sla op en kopieer je **Client ID** en **Client Secret**
+
+### 2. Omgevingsvariabelen instellen
+
+Kopieer `.env.example` naar `.env.local`:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cp .env.example .env.local
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `.env.local` en vul in:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```env
+SPOTIFY_CLIENT_ID=jouw_client_id
+SPOTIFY_CLIENT_SECRET=jouw_client_secret
+SPOTIFY_REDIRECT_URI=http://localhost:3000/api/auth/callback
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 3. Installeren en starten
 
-## Learn More
+```bash
+npm install
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+Open `http://localhost:3000`, klik **Verbind met Spotify** en je bent klaar.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Gebruik
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Zet muziek aan via Spotify (op je telefoon, computer of speaker)
+2. Open de app-URL in je browser
+3. Klik **Verbind met Spotify** en log in
+4. De visualizer start automatisch
+5. Cast de browsertab naar je TV via de Chromecast-knop in Chrome
 
-## Deploy on Vercel
+## Deployen naar Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Push je project naar GitHub
+2. Importeer het project op [vercel.com](https://vercel.com)
+3. Voeg de volgende environment variables toe in het Vercel dashboard:
+   - `SPOTIFY_CLIENT_ID`
+   - `SPOTIFY_CLIENT_SECRET`
+   - `SPOTIFY_REDIRECT_URI` → `https://jouw-app.vercel.app/api/auth/callback`
+   - `NEXT_PUBLIC_APP_URL` → `https://jouw-app.vercel.app`
+4. Voeg de Vercel-URL ook toe als Redirect URI in je Spotify Developer App
+5. Deploy!
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Tech stack
+
+- **Next.js 16** — App Router, TypeScript
+- **Three.js + GLSL** — GPU-accelerated shader visuals
+- **Spotify Web API** — OAuth 2.0, now playing, audio features
+- **LRCLIB** — Gratis gesynchroniseerde lyrics
+- **node-vibrant** — Kleurpaletten uit album art
+- **Vercel** — Hosting
