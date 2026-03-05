@@ -20,13 +20,13 @@ export function LyricsPanel({ lines, plain, activeIndex, palette }: LyricsPanelP
 
   if (lines && lines.length > 0) {
     return (
-      <div className="flex flex-col gap-3 overflow-hidden max-h-[40vh] text-right">
+      <div className="flex flex-col gap-3 overflow-y-auto max-h-[40vh] text-right scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
         {lines.map((line, i) => {
           const isActive = i === activeIndex
           const isPast = i < activeIndex
           return (
             <div
-              key={i}
+              key={line.timeMs}
               ref={isActive ? activeRef : null}
               style={{
                 color: isActive ? palette.lightVibrant : 'white',
