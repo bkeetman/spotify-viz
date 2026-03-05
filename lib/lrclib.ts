@@ -22,7 +22,7 @@ export function parseLrc(lrc: string): LrcLine[] {
 }
 
 export function findActiveLine(lines: LrcLine[], progressMs: number): number {
-  let activeIndex = 0
+  let activeIndex = -1
   for (let i = 0; i < lines.length; i++) {
     if (lines[i].timeMs <= progressMs) activeIndex = i
     else break

@@ -26,7 +26,7 @@ describe('parseLrc', () => {
 
 describe('findActiveLine', () => {
   const lines = [
-    { timeMs: 0, text: 'Intro' },
+    { timeMs: 5000, text: 'Intro' },
     { timeMs: 10000, text: 'Line one' },
     { timeMs: 20000, text: 'Line two' },
   ]
@@ -36,7 +36,12 @@ describe('findActiveLine', () => {
     expect(findActiveLine(lines, 22000)).toBe(2)
   })
 
-  it('returns 0 before first line', () => {
-    expect(findActiveLine(lines, 0)).toBe(0)
+  it('returns -1 before first line starts', () => {
+    expect(findActiveLine(lines, 0)).toBe(-1)
+    expect(findActiveLine(lines, 4999)).toBe(-1)
+  })
+
+  it('returns 0 exactly at first line timestamp', () => {
+    expect(findActiveLine(lines, 5000)).toBe(0)
   })
 })
