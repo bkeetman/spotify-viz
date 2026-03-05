@@ -37,13 +37,15 @@ void main() {
     float shock = 1.0 - smoothstep(0.0, 0.08, abs(length(p) - shockR));
     color += shock * u_color_a * u_beat * 2.0;
 
-    // Chromatic aberration on beat
-    float aberration = u_beat * 0.015;
-    vec2 rOffset = normalize(p) * aberration;
-    float rChannel = length(p - rOffset) - shockR;
-    float bChannel = length(p + rOffset) - shockR;
-    color.r += (1.0 - smoothstep(0.0, 0.1, abs(rChannel))) * u_beat;
-    color.b += (1.0 - smoothstep(0.0, 0.1, abs(bChannel))) * u_beat;
+    // Chromatic aberration on beat (guard against zero-length p at center)
+    if (length(p) > 0.001) {
+      float aberration = u_beat * 0.015;
+      vec2 rOffset = normalize(p) * aberration;
+      float rChannel = length(p - rOffset) - shockR;
+      float bChannel = length(p + rOffset) - shockR;
+      color.r += (1.0 - smoothstep(0.0, 0.1, abs(rChannel))) * u_beat;
+      color.b += (1.0 - smoothstep(0.0, 0.1, abs(bChannel))) * u_beat;
+    }
   }
 
   // Center glow

@@ -133,9 +133,16 @@ export function Scene({ palette, audioFeatures, albumArtUrl, shaderSrc }: SceneP
     const mat = materialRef.current
     if (!mat || !albumArtUrl) return
     const loader = new THREE.TextureLoader()
+    let currentTex: THREE.Texture | null = null
     loader.load(albumArtUrl, (tex) => {
+      const oldTex = mat.uniforms.u_album_tex.value as THREE.Texture | null
+      oldTex?.dispose()
       mat.uniforms.u_album_tex.value = tex
+      currentTex = tex
     })
+    return () => {
+      currentTex?.dispose()
+    }
   }, [albumArtUrl])
 
   return (
