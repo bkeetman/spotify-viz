@@ -32,6 +32,10 @@ export function VisualizerScene({
   const toastTimerRef = useRef<NodeJS.Timeout | null>(null)
   const clickCountRef = useRef(0)
   const clickTimerRef = useRef<NodeJS.Timeout | null>(null)
+  const indexRef = useRef(index)
+  const lockedRef = useRef(locked)
+  useEffect(() => { indexRef.current = index }, [index])
+  useEffect(() => { lockedRef.current = locked }, [locked])
 
   const showToast = useCallback((msg: string, isLocked: boolean) => {
     setToast({ msg, locked: isLocked })
@@ -77,6 +81,27 @@ export function VisualizerScene({
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
   }, [locked, next, toggleLock])
+
+  // External control via custom events (Cast message bus → window events)
+  useEffect(() => {
+    const onSkip = () => { if (!lockedRef.current) next() }
+    const onLock = () => {
+      setLocked(true)
+      showToast(VISUALIZATIONS[indexRef.current].name, true)
+    }
+    const onUnlock = () => {
+      setLocked(false)
+      showToast('Vrij', false)
+    }
+    window.addEventListener('viz:skip', onSkip)
+    window.addEventListener('viz:lock', onLock)
+    window.addEventListener('viz:unlock', onUnlock)
+    return () => {
+      window.removeEventListener('viz:skip', onSkip)
+      window.removeEventListener('viz:lock', onLock)
+      window.removeEventListener('viz:unlock', onUnlock)
+    }
+  }, [next, showToast])
 
   // Double-click anywhere = lock/unlock
   const handleClick = useCallback(() => {

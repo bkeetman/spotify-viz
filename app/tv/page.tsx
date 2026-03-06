@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Script from 'next/script'
 import { useNowPlaying } from '@/hooks/useNowPlaying'
 import { usePalette } from '@/hooks/usePalette'
 import { useLyrics } from '@/hooks/useLyrics'
@@ -47,6 +48,25 @@ export default function TVPage() {
   }
 
   return (
+    <>
+    {/* Cast Receiver SDK — only active when running on a Chromecast device */}
+    <Script
+      src="//www.gstatic.com/cast/sdk/libs/caf_receiver/v3/cast_receiver_framework.js"
+      strategy="afterInteractive"
+      onLoad={() => {
+        const w = window as any
+        const ctx = w.cast?.framework?.CastReceiverContext?.getInstance?.()
+        if (!ctx) return
+        const NS = 'urn:x-cast:com.spotifyviz.control'
+        ctx.addCustomMessageListener(NS, (event: any) => {
+          const { type } = event.data ?? {}
+          if (type === 'skip')   window.dispatchEvent(new CustomEvent('viz:skip'))
+          if (type === 'lock')   window.dispatchEvent(new CustomEvent('viz:lock'))
+          if (type === 'unlock') window.dispatchEvent(new CustomEvent('viz:unlock'))
+        })
+        ctx.start()
+      }}
+    />
     <div
       className="fixed inset-0 overflow-hidden bg-black"
       style={{ cursor: showCursor ? 'default' : 'none' }}
@@ -105,5 +125,6 @@ export default function TVPage() {
         </div>
       )}
     </div>
+    </>
   )
 }
