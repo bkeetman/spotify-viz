@@ -1,4 +1,6 @@
 import auroraSrc from './shaders/aurora'
+import fluxSrc from './shaders/flux'
+import prismSrc from './shaders/prism'
 import pulseSrc from './shaders/pulse'
 import nebulaSrc from './shaders/nebula'
 import lavaSrc from './shaders/lava'
@@ -28,4 +30,6 @@ export const VISUALIZATIONS: Visualization[] = [
   { id: 'synthwave',    name: 'Synthwave',        shader: synthwaveSrc },
   { id: 'dna',          name: 'DNA Helix',        shader: dnaSrc },
   { id: 'crystal',      name: 'Kristal',          shader: crystalSrc },
+  { id: 'flux',         name: 'Flux',             shader: fluxSrc },
+  { id: 'prism',        name: 'Prisma',           shader: prismSrc },
 ]
