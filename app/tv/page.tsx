@@ -59,12 +59,20 @@ export default function TVPage() {
         trackId={track?.trackId ?? null}
       />
 
+      {/* Dark vignette behind text — ensures legibility against any shader color */}
+      <div
+        className="absolute inset-0 z-10 pointer-events-none"
+        style={{
+          background: 'linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.3) 50%, transparent 100%)',
+        }}
+      />
+
       {/* Overlay */}
-      <div className="relative z-10 flex h-full p-10 lg:p-16 gap-12">
+      <div className="relative z-20 flex h-full p-10 lg:p-16 gap-12">
         {/* Left column: album art + track info + progress */}
         <div className="flex flex-col justify-end gap-6 w-64 lg:w-80 shrink-0">
           <AlbumArt url={track?.albumArtUrl ?? null} alt={track?.albumName ?? ''} />
-          <TrackInfo track={track} palette={palette} />
+          <TrackInfo track={track} />
           {track && (
             <ProgressBar
               progressMs={track.progressMs}
@@ -90,7 +98,7 @@ export default function TVPage() {
 
       {/* Nothing playing state */}
       {!track?.isPlaying && (
-        <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
+        <div className="absolute inset-0 z-30 flex items-center justify-center pointer-events-none">
           <p className="text-white/20 text-2xl tracking-widest uppercase">
             Niets aan het spelen
           </p>

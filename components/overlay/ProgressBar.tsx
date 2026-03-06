@@ -48,7 +48,7 @@ export function ProgressBar({ progressMs, durationMs, isPlaying, palette }: Prog
           }}
         />
       </div>
-      <div className="flex justify-between text-xs opacity-40 text-white">
+      <div className="flex justify-between text-xs text-white/70" style={{ textShadow: '0 1px 4px rgba(0,0,0,0.9)' }}>
         <span>{formatTime(localProgress)}</span>
         <span>{formatTime(durationMs)}</span>
       </div>
