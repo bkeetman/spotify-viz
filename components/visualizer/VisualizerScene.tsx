@@ -5,9 +5,9 @@ import { useEffect, useState } from 'react'
 import type { Palette } from '@/hooks/usePalette'
 import type { AudioFeatures } from '@/hooks/useNowPlaying'
 
-import auroraSrc from './shaders/aurora.glsl'
-import pulseSrc from './shaders/pulse.glsl'
-import nebulaSrc from './shaders/nebula.glsl'
+import auroraSrc from './shaders/aurora'
+import pulseSrc from './shaders/pulse'
+import nebulaSrc from './shaders/nebula'
 
 const Scene = dynamic(
   () => import('./Scene').then(m => m.Scene),
