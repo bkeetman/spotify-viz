@@ -36,6 +36,25 @@ export default function TVPage() {
     }
   }, [])
 
+  // Poll for remote control commands (works with or without Cast SDK)
+  useEffect(() => {
+    let lastTs = 0
+    const poll = async () => {
+      try {
+        const res = await fetch(`/api/viz-control?since=${lastTs}`)
+        const data = await res.json()
+        if (data?.ts) {
+          lastTs = data.ts
+          if (data.action === 'skip')   window.dispatchEvent(new CustomEvent('viz:skip'))
+          if (data.action === 'lock')   window.dispatchEvent(new CustomEvent('viz:lock'))
+          if (data.action === 'unlock') window.dispatchEvent(new CustomEvent('viz:unlock'))
+        }
+      } catch {}
+    }
+    const id = setInterval(poll, 1500)
+    return () => clearInterval(id)
+  }, [])
+
   if (!isAuthenticated) {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-black text-white">
