@@ -19,6 +19,7 @@ export default function RemotePage() {
   const [castReady, setCastReady] = useState(false)
   const [castConnected, setCastConnected] = useState(false)
   const [locked, setLocked] = useState(false)
+  const [showCastHelp, setShowCastHelp] = useState(false)
   const sessionRef = useRef<any>(null)
 
   useEffect(() => {
@@ -62,8 +63,11 @@ export default function RemotePage() {
   }
 
   function handleCast() {
-    if (!castReady) return
-    ;(window as any).cast.framework.CastContext.getInstance().requestSession()
+    if (castReady) {
+      ;(window as any).cast.framework.CastContext.getInstance().requestSession()
+    } else {
+      setShowCastHelp(true)
+    }
   }
 
   async function handleToggleLock() {
@@ -108,25 +112,22 @@ export default function RemotePage() {
             {castConnected && (
               <span className="text-xs tracking-widest uppercase text-emerald-400">Cast actief</span>
             )}
-            {/* Cast button: launches /tv on Chromecast */}
-            {castReady && (
-              <button
-                onClick={handleCast}
-                aria-label="Start Visualizer op Chromecast"
-                className="w-10 h-10 flex items-center justify-center rounded-xl transition-all active:scale-90"
-                style={{
-                  background: castConnected ? 'rgba(29,185,84,0.15)' : 'rgba(255,255,255,0.06)',
-                  border: castConnected
-                    ? '1px solid rgba(29,185,84,0.3)'
-                    : '1px solid rgba(255,255,255,0.08)',
-                  color: castConnected ? '#1DB954' : 'rgba(255,255,255,0.5)',
-                }}
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M1 18v3h3c0-1.66-1.34-3-3-3zm0-4v2c2.76 0 5 2.24 5 5h2c0-3.87-3.13-7-7-7zm0-4v2c4.97 0 9 4.03 9 9h2C12 15.05 7.06 10 1 10zm20-6H3C1.9 4 1 4.9 1 6v3h2V6h18v12h-6v2h6c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2z" />
-                </svg>
-              </button>
-            )}
+            <button
+              onClick={handleCast}
+              aria-label="Start Visualizer op Chromecast"
+              className="w-10 h-10 flex items-center justify-center rounded-xl transition-all active:scale-90"
+              style={{
+                background: castConnected ? 'rgba(29,185,84,0.15)' : 'rgba(255,255,255,0.06)',
+                border: castConnected
+                  ? '1px solid rgba(29,185,84,0.3)'
+                  : '1px solid rgba(255,255,255,0.08)',
+                color: castConnected ? '#1DB954' : 'rgba(255,255,255,0.5)',
+              }}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M1 18v3h3c0-1.66-1.34-3-3-3zm0-4v2c2.76 0 5 2.24 5 5h2c0-3.87-3.13-7-7-7zm0-4v2c4.97 0 9 4.03 9 9h2C12 15.05 7.06 10 1 10zm20-6H3C1.9 4 1 4.9 1 6v3h2V6h18v12h-6v2h6c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2z" />
+              </svg>
+            </button>
           </div>
         </div>
 
@@ -206,6 +207,49 @@ export default function RemotePage() {
           </a>
         </div>
       </div>
+
+      {/* Cast help modal — shown on mobile where SDK is unavailable */}
+      {showCastHelp && (
+        <div
+          className="fixed inset-0 z-50 flex items-end justify-center bg-black/70 backdrop-blur-sm"
+          onClick={() => setShowCastHelp(false)}
+        >
+          <div
+            className="w-full max-w-md mx-4 mb-8 rounded-3xl p-6 flex flex-col gap-4"
+            style={{ background: 'rgba(30,30,30,0.98)', border: '1px solid rgba(255,255,255,0.1)' }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 className="text-white font-semibold text-lg">Cast naar TV</h2>
+            <p className="text-white/50 text-sm leading-relaxed">
+              Open de visualizer op je TV of computer en gebruik deze remote om te bedienen.
+            </p>
+            <div className="flex flex-col gap-2">
+              <a
+                href="/tv"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="py-4 rounded-2xl font-medium text-sm tracking-widest uppercase text-center transition-all active:scale-95"
+                style={{
+                  background: 'rgba(29,185,84,0.15)',
+                  border: '1px solid rgba(29,185,84,0.3)',
+                  color: '#1DB954',
+                }}
+              >
+                Open TV Pagina ↗
+              </a>
+              <p className="text-white/30 text-xs text-center leading-relaxed mt-1">
+                Open de TV pagina op je computer of smart TV en cast het tabblad via Chrome, of gebruik AirPlay.
+              </p>
+            </div>
+            <button
+              onClick={() => setShowCastHelp(false)}
+              className="py-3 rounded-xl text-xs tracking-widest uppercase text-white/30 transition-all active:scale-95"
+            >
+              Sluiten
+            </button>
+          </div>
+        </div>
+      )}
     </>
   )
 }
